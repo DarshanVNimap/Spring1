@@ -1,7 +1,11 @@
 package com.manytomany.controller;
 
+import java.io.ByteArrayInputStream;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,6 +58,18 @@ public class StudentController {
 	@GetMapping("/notEnroll")
 	public ResponseEntity<?> getAllStudentNotEnroll(){
 		return new ResponseEntity<>(service.getAllStudentNotEnroll(), HttpStatus.OK);
+	}
+	
+	@GetMapping("/getpdf")
+	public ResponseEntity<InputStreamResource> generatePdf() {
+		
+		ByteArrayInputStream data = service.generatePdf();
+		
+		return ResponseEntity.
+					status(HttpStatus.OK)
+					.contentType(MediaType.APPLICATION_PDF)
+					.header("Content-Disposition", "attachment; filename=pdf_data.pdf")
+					.body(new InputStreamResource(data));
 	}
 	
 	
