@@ -16,9 +16,15 @@ import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfTable;
 import com.lowagie.text.pdf.PdfWriter;
 import com.manytomany.model.Student;
 import com.manytomany.repo.StudentRepo;
+
+import jakarta.persistence.Index;
 
 @Service
 public class StudentService {
@@ -66,8 +72,10 @@ public class StudentService {
 	
 	public ByteArrayInputStream generatePdf() {
 		
-		String title = "Hello ";
-		String name = "Darrshan vala is world best java developer";
+		int index = 0;
+		
+		String title = "Student Record";
+		String description = "Here the list of all the student who have register in ower portal.";
 		
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		
@@ -82,17 +90,52 @@ public class StudentService {
 		Font parafont = FontFactory.getFont(FontFactory.TIMES);
 		parafont.setSize(14);
 		
+		Font tableHeading  = FontFactory.getFont(FontFactory.TIMES_BOLD);
+		
+		
 		Paragraph heading = new Paragraph(title , titleFont);
 		heading.setAlignment(Paragraph.ALIGN_CENTER);
 		
-		
-		
 		doc.add(heading);
 		
-		Paragraph para = new Paragraph(name , parafont);
+		Paragraph para = new Paragraph(description , parafont);
 		para.setFirstLineIndent((float) 1.3);
 		
 		doc.add(para);
+		
+		PdfPTable table = new PdfPTable(4);
+		
+		table.setWidthPercentage(90f);
+		table.setWidths(new int[] {4,4,4,4});
+		table.setSpacingBefore(5);
+		
+		PdfPCell cell = new PdfPCell();
+		
+		cell.setPadding(4);	
+		
+		cell.setPhrase(new Phrase("Sr No" , tableHeading));
+		table.addCell(cell);
+		
+		cell.setPhrase(new Phrase("Name" , tableHeading));
+		table.addCell(cell);
+		
+		cell.setPhrase(new Phrase("Department" , tableHeading));
+		table.addCell(cell);
+		
+		cell.setPhrase(new Phrase("Age" , tableHeading));
+		table.addCell(cell);
+		
+		
+		
+		for(Student student : repository.findAll()) {
+			table.addCell(String.valueOf(++index));
+			table.addCell(student.getName());
+			table.addCell(student.getDepartment());
+			table.addCell(String.valueOf(student.getAge()));
+		}
+		
+		
+		doc.add(table);
 		doc.close();
 		
 		return new ByteArrayInputStream(out.toByteArray());
