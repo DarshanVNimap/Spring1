@@ -19,12 +19,9 @@ import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfTable;
 import com.lowagie.text.pdf.PdfWriter;
 import com.manytomany.model.Student;
 import com.manytomany.repo.StudentRepo;
-
-import jakarta.persistence.Index;
 
 @Service
 public class StudentService {
@@ -35,20 +32,25 @@ public class StudentService {
 	private Logger log = LoggerFactory.getLogger(StudentService.class);
 	
 	public List<Student> getAllStudent(Integer pageNo , Integer pageSize , String sortBy){
+		log.info("Getting  all student...");
 		return repository.findAll(PageRequest.of(pageNo, pageSize , Sort.by(sortBy))).getContent();
 	}
 	
 	public List<Student> getAllStudentByName(String name){
+		log.info("Getting Detail of {}" , name);
 		return repository.findByName(name);
 	}
 	public Student getStudentById(Integer id){
+		log.info("Search for student of id: {}" , id);
 		return repository.findById(id).orElseThrow();
 	}
 	public List<Student> getAllStudentByDepartment(String department){
+		log.info("Search for students of department: {}" ,department);
 		return repository.findByDepartment(department);
 		
 	}
 	public List<Student> getAllStudentOrderByCourseId(){
+		log.info("Search for student of enroll in couse");
 		return repository.findAllByOrderByCourseId();
 	}
 	public List<Student> getAllStudentNotEnroll(){
@@ -108,8 +110,8 @@ public class StudentService {
 		table.setWidthPercentage(90f);
 		table.setWidths(new int[] {4,4,4,4});
 		table.setSpacingBefore(5);
-		
 		PdfPCell cell = new PdfPCell();
+		
 		
 		cell.setPadding(4);	
 		

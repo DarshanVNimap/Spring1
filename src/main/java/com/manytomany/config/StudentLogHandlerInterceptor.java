@@ -10,8 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class StudentLogHandlerInterceptor implements HandlerInterceptor {
 	
-	private static final String USERNAME = "admin";
-	private static final String PASSWORD = "admin";
+//	private static final String USERNAME = "admin";
+//	private static final String PASSWORD = "admin";
 	
 
 	@Override
